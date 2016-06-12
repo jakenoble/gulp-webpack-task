@@ -8,7 +8,7 @@ var _ = require('lodash'),
 
 module.exports = function (isDevelopment, config) {
     return {
-        context: __dirname + '/',
+        context: __dirname + '/../../',
         watch: isDevelopment,
         devtool: isDevelopment ? 'cheap-inline-source-map' : null,
 
@@ -17,7 +17,7 @@ module.exports = function (isDevelopment, config) {
         },
 
         resolve: {
-            root: __dirname,
+            root: __dirname + '/../../',
             modulesDirectories: [
                 'node_modules',
                 'bower_components'
