@@ -41,11 +41,11 @@ module.exports = function (isDevelopment, config) {
                 test: /\.less$/,
                 loader: ExtractTextPlugin.extract(isDevelopment ? 'css!less' : 'css?minimize!less')
             }, {
-                test: /\.(png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
+                test: /\.(ico|png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
                 include: new RegExp(config.frontendDir),
                 loader: 'file?name=[1]&regExp=' + config.frontendDir + '(.*)'
             }, {
-                test: /\.(png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
+                test: /\.(ico|png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
                 include: /\/(bower_components|node_modules)\//,
                 loader: 'file?name=[2]&regExp=/(bower_components|node_modules)/(.*)'
             }]
