@@ -36,7 +36,7 @@ module.exports = function (isDevelopment, config) {
                     loader: 'babel',
                     exclude: /(node_modules|bower_components)/,
                     query: {
-                        presets: ['es2015']
+                        presets: config.presets ? config.presets : ['es2015']
                     }
                 }],
 
