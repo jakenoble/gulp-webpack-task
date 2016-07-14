@@ -46,12 +46,18 @@ module.exports = function (isDevelopment, config) {
                 }, {
                     test: /\.less$/,
                     loader: ExtractTextPlugin.extract(isDevelopment ? 'css!less' : 'css?minimize!less')
+                }, {
+                    test: /\.scss$/,
+                    loader: ExtractTextPlugin.extract(isDevelopment ? 'css!scss' : 'css?minimize!scss')
                 }] : [{
                     test: /\.css$/,
                     loader: isDevelopment ? 'style!css' : 'style!css?minimize'
                 }, {
                     test: /\.less$/,
                     loader: isDevelopment ? 'style!css!less' : 'style!css?minimize!less'
+                }, {
+                    test: /\.scss$/,
+                    loader: isDevelopment ? 'style!css!scss' : 'style!css?minimize!scss'
                 }],
 
                 [{

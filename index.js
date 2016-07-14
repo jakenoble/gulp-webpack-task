@@ -37,17 +37,18 @@ module.exports = function (gulp, config, isDevelopment) {
                     }
                 })
             }))
-            .
-            pipe(named())
+            .pipe(named())
             .pipe(webpack(webpackConfig, null, done))
             .pipe(gulp.dest(config.destination))
             .on('data', function () {
-                if (firstBuildReady && isDevelopment) {
+                if (!config.oldGulp && firstBuildReady && isDevelopment) {
                     setTimeout(callback, 100);
                 }
             })
             .on('end', function () {
-                callback();
+                if (!config.oldGulp) {
+                    callback();
+                }
             });
     };
 };
