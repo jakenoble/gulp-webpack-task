@@ -15,7 +15,7 @@ module.exports = function (isDevelopment, config) {
         devtool: isDevelopment ? 'cheap-inline-source-map' : null,
 
         output: {
-            filename: isDevelopment ? '[name].js' : '[name]-[hash].js',
+            filename: config.hash ? '[name]-[hash].js' : '[name].js',
             publicPath: config.publicDir
         },
 
@@ -79,7 +79,7 @@ module.exports = function (isDevelopment, config) {
         ], isDevelopment ? [] : [
             new webpack.optimize.UglifyJsPlugin()
         ], !extractCss ? [] : [
-            new ExtractTextPlugin(isDevelopment ? '[name].css' : '[name]-[hash].css', {allChunks: true})
+            new ExtractTextPlugin(config.hash ? '[name]-[hash].css' : '[name].css', {allChunks: true})
         ])
     };
 };
