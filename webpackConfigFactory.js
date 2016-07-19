@@ -11,7 +11,7 @@ module.exports = function (isDevelopment, config) {
 
     return {
         context: __dirname + '/../../',
-        watch: isDevelopment,
+        watch: config.watch,
         devtool: isDevelopment ? 'cheap-inline-source-map' : null,
 
         output: {
