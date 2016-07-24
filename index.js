@@ -8,8 +8,12 @@ var _ = require('lodash'),
     plumber = require('gulp-plumber'),
     named = require('vinyl-named');
 
-module.exports = function (gulp, config, isDevelopment) {
-    var webpackConfig = webpackConfigFactory(isDevelopment, config);
+module.exports = function (gulp, config) {
+    var webpackConfig = webpackConfigFactory(config);
+    var watch = config.watch || false,
+        isOld = config.old || false,
+        entry = config.entry,
+        destination = config.destination;
 
     return function (callback) {
         var firstBuildReady = false;
@@ -26,7 +30,7 @@ module.exports = function (gulp, config, isDevelopment) {
             }));
         };
 
-        return gulp.src(config.entry)
+        return gulp.src(entry)
             .pipe(plumber({
                 errorHandler: notify.onError(function (err) {
                     return {
@@ -39,14 +43,14 @@ module.exports = function (gulp, config, isDevelopment) {
             }))
             .pipe(named())
             .pipe(webpack(webpackConfig, null, done))
-            .pipe(gulp.dest(config.destination))
+            .pipe(gulp.dest(destination))
             .on('data', function () {
-                if (!config.oldGulp && firstBuildReady && isDevelopment) {
+                if (!isOld && firstBuildReady && watch) {
                     setTimeout(callback, 100);
                 }
             })
             .on('end', function () {
-                if (!config.oldGulp) {
+                if (!isOld) {
                     callback();
                 }
             });
