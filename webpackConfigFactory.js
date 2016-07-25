@@ -55,7 +55,7 @@ module.exports = function (config) {
             loaders: [{
                 test: /\.js$/,
                 loader: 'babel',
-                exclude: /(node_modules|bower_components)/,
+                exclude: /(node_modules|bower_components|vendor)/,
                 query: {
                     presets: presets
                 }
@@ -74,8 +74,8 @@ module.exports = function (config) {
                 loader: 'file?name=[1]&regExp=' + frontendPath + '(.*)'
             }, {
                 test: /\.(png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
-                include: /\/(bower_components|node_modules)\//,
-                loader: 'file?name=[2]&regExp=/(bower_components|node_modules)/(.*)'
+                include: /\/(bower_components|node_modules|vendor)\//,
+                loader: 'file?name=[2]&regExp=/(bower_components|node_modules|vendor)/(.*)'
             }]
         },
 
