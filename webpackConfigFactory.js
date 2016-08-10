@@ -4,7 +4,8 @@ var _ = require('lodash'),
     webpackStream = require('webpack-stream'),
     webpack = webpackStream.webpack,
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
-    ManifestPlugin = require('webpack-manifest-plugin');
+    ManifestPlugin = require('webpack-manifest-plugin'),
+    autoprefixer = require('autoprefixer');
 
 var getDefaultValue = function (value, defaultValue) {
     return value !== undefined ? value : defaultValue;
@@ -61,13 +62,13 @@ module.exports = function (config) {
                 }
             }, {
                 test: /\.css$/,
-                loader: extractWrapper(minimize ? 'css?minimize' : 'css')
+                loader: extractWrapper(minimize ? 'css?minimize!postcss-loader' : 'css!postcss-loader')
             }, {
                 test: /\.less$/,
-                loader: extractWrapper(minimize ? 'css?minimize!less' : 'css!less')
+                loader: extractWrapper(minimize ? 'css?minimize!postcss-loader!less' : 'css!postcss-loader!less')
             }, {
                 test: /\.scss$/,
-                loader: extractWrapper(minimize ? 'css?minimize!sass' : 'css!sass')
+                loader: extractWrapper(minimize ? 'css?minimize!postcss-loader!sass' : 'css!postcss-loader!sass')
             }, {
                 test: /\.(png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
                 include: new RegExp(frontendPath),
@@ -78,6 +79,8 @@ module.exports = function (config) {
                 loader: 'file?name=[2]&regExp=/(bower_components|node_modules|vendor)/(.*)'
             }]
         },
+
+        postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
 
         plugins: _.concat([
                 new webpack.NoErrorsPlugin(),
