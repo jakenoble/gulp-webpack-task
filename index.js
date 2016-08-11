@@ -8,14 +8,15 @@ var _ = require('lodash'),
     plumber = require('gulp-plumber'),
     named = require('vinyl-named');
 
-module.exports = function (gulp, config) {
-    var webpackConfig = webpackConfigFactory(config);
-    var watch = config.watch || false,
-        isOld = config.old || false,
-        entry = config.entry,
-        destination = config.destination;
-
+module.exports = function (gulp, configExpr) {
     return function (callback) {
+        var config = _.isFunction(configExpr) ? configExpr() : configExpr;
+        var webpackConfig = webpackConfigFactory(config);
+        var watch = config.watch || false,
+            isOld = config.old || false,
+            entry = config.entry,
+            destination = config.destination;
+
         var firstBuildReady = false;
 
         var done = function (err, stats) {
