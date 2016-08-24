@@ -25,13 +25,15 @@ module.exports = function (config) {
 
         publicPath = getDefaultValue(config.publicPath, ''),
         rootPath = getDefaultValue(config.rootPath, __dirname + '/../../'),
-        frontendPath = getDefaultValue(config.frontendPath, ''),
+        frontendPath = getDefaultValue(config.frontendPath, []),
 
         presets = getDefaultValue(config.presets, ['es2015']),
         aliases = getDefaultValue(config.aliases, []),
         provides = getDefaultValue(config.provides, []);
 
     var extractWrapper = getExtractWrapper(extract ? ExtractTextPlugin : undefined);
+
+    frontendPath = _.isArray(frontendPath) ? frontendPath : [frontendPath];
 
     return {
         context: rootPath,
@@ -53,34 +55,40 @@ module.exports = function (config) {
 
         module: {
 
-            loaders: [{
-                test: /\.js$/,
-                loader: 'babel',
-                exclude: /(node_modules|bower_components|vendor)/,
-                query: {
-                    presets: presets
-                }
-            }, {
-                test: /\.css$/,
-                loader: extractWrapper(minimize ? 'css?minimize!postcss-loader' : 'css!postcss-loader')
-            }, {
-                test: /\.less$/,
-                loader: extractWrapper(minimize ? 'css?minimize!postcss-loader!less' : 'css!postcss-loader!less')
-            }, {
-                test: /\.scss$/,
-                loader: extractWrapper(minimize ? 'css?minimize!postcss-loader!sass' : 'css!postcss-loader!sass')
-            }, {
-                test: /\.(ico|png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
-                include: new RegExp(frontendPath),
-                loader: 'file?name=[1]&regExp=' + frontendPath + '(.*)'
-            }, {
-                test: /\.(ico|png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
-                include: /\/(bower_components|node_modules|vendor)\//,
-                loader: 'file?name=[2]&regExp=/(bower_components|node_modules|vendor)/(.*)'
-            }]
+            loaders: _.concat(
+                [{
+                    test: /\.js$/,
+                    loader: 'babel',
+                    exclude: /(node_modules|bower_components|vendor)/,
+                    query: {
+                        presets: presets
+                    }
+                }, {
+                    test: /\.css$/,
+                    loader: extractWrapper(minimize ? 'css?minimize!postcss-loader' : 'css!postcss-loader')
+                }, {
+                    test: /\.less$/,
+                    loader: extractWrapper(minimize ? 'css?minimize!postcss-loader!less' : 'css!postcss-loader!less')
+                }, {
+                    test: /\.scss$/,
+                    loader: extractWrapper(minimize ? 'css?minimize!postcss-loader!sass' : 'css!postcss-loader!sass')
+                }, {
+                    test: /\.(ico|png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
+                    include: /\/(bower_components|node_modules|vendor)\//,
+                    loader: 'file?name=[2]&regExp=/(bower_components|node_modules|vendor)/(.*)'
+                }],
+
+                _.map(frontendPath, function (path) {
+                    return {
+                        test: /\.(ico|png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
+                        include: new RegExp(path),
+                        loader: 'file?name=[1]&regExp=' + path + '(.*)'
+                    }
+                })
+            )
         },
 
-        postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
+        postcss: [autoprefixer({browsers: ['last 2 versions']})],
 
         plugins: _.concat([
                 new webpack.NoErrorsPlugin(),
