@@ -73,14 +73,14 @@ module.exports = function (config) {
                     test: /\.scss$/,
                     loader: extractWrapper(minimize ? 'css?minimize!postcss-loader!sass' : 'css!postcss-loader!sass')
                 }, {
-                    test: /\.(ico|png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
+                    test: /\.(ico|png|jpg|jpeg|gif|svg|ttf|otf|eot|woff|woff2)/,
                     include: /\/(bower_components|node_modules|vendor)\//,
                     loader: 'file?name=[2]&regExp=/(bower_components|node_modules|vendor)/(.*)'
                 }],
 
                 _.map(frontendPath, function (path) {
                     return {
-                        test: /\.(ico|png|jpg|gif|svg|ttf|otf|eot|woff|woff2)/,
+                        test: /\.(ico|png|jpg|jpeg|gif|svg|ttf|otf|eot|woff|woff2)/,
                         include: new RegExp(path),
                         loader: 'file?name=[1]&regExp=' + path + '(.*)'
                     }
