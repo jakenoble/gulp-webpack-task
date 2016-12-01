@@ -15,7 +15,7 @@ module.exports = function (gulp, configExpr) {
         var watch = config.watch || false,
             isOld = config.old || false,
             entry = config.entry,
-            destination = config.destination;
+            destinations = _.isArray(config.destination) ? config.destination : [config.destination];
 
         var firstBuildReady = false;
 
@@ -31,7 +31,7 @@ module.exports = function (gulp, configExpr) {
             }));
         };
 
-        return gulp.src(entry)
+        var gulpPipe = gulp.src(entry)
             .pipe(plumber({
                 errorHandler: notify.onError(function (err) {
                     return {
@@ -43,8 +43,13 @@ module.exports = function (gulp, configExpr) {
                 })
             }))
             .pipe(named())
-            .pipe(webpack(webpackConfig, null, done))
-            .pipe(gulp.dest(destination))
+            .pipe(webpack(webpackConfig, null, done));
+
+        _.forEach(destinations, function (destination) {
+            gulpPipe.pipe(gulp.dest(destination));
+        });
+
+        gulpPipe
             .on('data', function () {
                 if (!isOld && firstBuildReady && watch) {
                     setTimeout(callback, 100);
@@ -55,5 +60,7 @@ module.exports = function (gulp, configExpr) {
                     callback();
                 }
             });
+
+        return gulpPipe;
     };
 };
