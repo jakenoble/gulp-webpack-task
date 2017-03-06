@@ -33,14 +33,14 @@ module.exports = function (gulp, configExpr) {
 
         var gulpPipe = gulp.src(entry)
             .pipe(plumber({
-                errorHandler: notify.onError(function (err) {
-                    return {
-                        title: 'Webpack',
+                errorHandler: function(err) {
+                    notify.onError({
+                        title:    'Webpack',
                         message: _.truncate(err.message, {
                             length: 250
                         })
-                    }
-                })
+                    })(err);
+                }
             }))
             .pipe(named())
             .pipe(webpack(webpackConfig, null, done));
