@@ -20,15 +20,15 @@ module.exports = function (gulp, configExpr) {
         var firstBuildReady = false;
 
         var done = function (err, stats) {
-            firstBuildReady = true;
-
-            if (err) {
-                return;
-            }
-
             gulplog[stats.hasErrors() ? 'error' : 'info'](stats.toString({
                 colors: true
             }));
+
+            if (!firstBuildReady) {
+                callback();
+            }
+
+            firstBuildReady = true;
         };
 
         var gulpPipe = gulp.src(entry)
@@ -48,18 +48,6 @@ module.exports = function (gulp, configExpr) {
         _.forEach(destinations, function (destination) {
             gulpPipe.pipe(gulp.dest(destination));
         });
-
-        gulpPipe
-            .on('data', function () {
-                if (!isOld && firstBuildReady && watch) {
-                    setTimeout(callback, 100);
-                }
-            })
-            .on('end', function () {
-                if (!isOld) {
-                    callback();
-                }
-            });
 
         return gulpPipe;
     };

@@ -5,9 +5,10 @@ var _ = require('lodash'),
     webpack = webpackStream.webpack,
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
     ManifestPlugin = require('webpack-manifest-plugin'),
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
     autoprefixer = require('autoprefixer');
 
-var copyFileExtensions = /\.(ico|png|jpg|jpeg|gif|svg|ttf|otf|eot|woff|woff2|mp4)/;
+var copyFileExtensions = /\.(ico|png|jpg|jpeg|gif|svg|ttf|otf|eot|woff|woff2)/;
 
 var getDefaultValue = function (value, defaultValue) {
     return value !== undefined ? value : defaultValue;
@@ -28,6 +29,7 @@ module.exports = function (config) {
         publicPath = getDefaultValue(config.publicPath, ''),
         rootPath = getDefaultValue(config.rootPath, __dirname + '/../../'),
         frontendPath = getDefaultValue(config.frontendPath, []),
+        filesPath = getDefaultValue(config.filesPath, 'files'),
 
         presets = getDefaultValue(config.presets, ['es2015']),
         aliases = getDefaultValue(config.aliases, []),
@@ -98,7 +100,12 @@ module.exports = function (config) {
             ],
             manifest ? [new ManifestPlugin({basePath: publicPath})] : [],
             minimize ? [new webpack.optimize.UglifyJsPlugin()] : [],
-            extract ? [new ExtractTextPlugin(hash ? '[name]-[hash].css' : '[name].css', {allChunks: true})] : []
+            extract ? [new ExtractTextPlugin(hash ? '[name]-[hash].css' : '[name].css', {allChunks: true})] : [],
+            [
+                new CopyWebpackPlugin([
+                    {from: filesPath}
+                ])
+            ]
         )
     };
 };
