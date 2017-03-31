@@ -29,7 +29,7 @@ module.exports = function (config) {
         publicPath = getDefaultValue(config.publicPath, ''),
         rootPath = getDefaultValue(config.rootPath, __dirname + '/../../'),
         frontendPath = getDefaultValue(config.frontendPath, []),
-        filesPath = getDefaultValue(config.filesPath, 'files'),
+        filesPath = getDefaultValue(config.filesPath, false),
 
         presets = getDefaultValue(config.presets, ['es2015']),
         aliases = getDefaultValue(config.aliases, []),
@@ -101,11 +101,7 @@ module.exports = function (config) {
             manifest ? [new ManifestPlugin({basePath: publicPath})] : [],
             minimize ? [new webpack.optimize.UglifyJsPlugin()] : [],
             extract ? [new ExtractTextPlugin(hash ? '[name]-[hash].css' : '[name].css', {allChunks: true})] : [],
-            [
-                new CopyWebpackPlugin([
-                    {from: filesPath}
-                ])
-            ]
+            filesPath ? [new CopyWebpackPlugin([{from: filesPath}])] : []
         )
     };
 };
