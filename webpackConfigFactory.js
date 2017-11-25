@@ -95,6 +95,9 @@ module.exports = function (config) {
         postcss: [autoprefixer({browsers: ['last 2 versions']})],
 
         plugins: _.concat([
+                new webpack.DefinePlugin({
+                    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+                }),
                 new webpack.NoErrorsPlugin(),
                 new webpack.ProvidePlugin(provides)
             ],
