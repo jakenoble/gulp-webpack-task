@@ -99,7 +99,10 @@ module.exports = function (config) {
                     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
                 }),
                 new webpack.NoErrorsPlugin(),
-                new webpack.ProvidePlugin(provides)
+                new webpack.ProvidePlugin(provides),
+                new webpack.optimize.CommonsChunkPlugin({
+                    name: 'common'
+                })
             ],
             manifest ? [new ManifestPlugin({basePath: publicPath})] : [],
             minimize ? [new webpack.optimize.UglifyJsPlugin()] : [],
