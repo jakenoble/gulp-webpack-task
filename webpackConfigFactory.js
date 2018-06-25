@@ -25,6 +25,7 @@ module.exports = function (config) {
         extract = getDefaultValue(config.extract, true),
         hash = getDefaultValue(config.hash, false),
         manifest = getDefaultValue(config.manifest, false),
+        commonChunkConfig = getDefaultValue(config.commonChunkConfig, {name: 'common'}),
 
         publicPath = getDefaultValue(config.publicPath, ''),
         rootPath = getDefaultValue(config.rootPath, __dirname + '/../../'),
@@ -100,9 +101,7 @@ module.exports = function (config) {
                 }),
                 new webpack.NoErrorsPlugin(),
                 new webpack.ProvidePlugin(provides),
-                new webpack.optimize.CommonsChunkPlugin({
-                    name: 'common'
-                })
+                new webpack.optimize.CommonsChunkPlugin(commonChunkConfig)
             ],
             manifest ? [new ManifestPlugin({basePath: publicPath})] : [],
             minimize ? [new webpack.optimize.UglifyJsPlugin()] : [],
