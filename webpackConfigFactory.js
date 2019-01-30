@@ -22,7 +22,7 @@ var getExtractWrapper = function (plugin) {
 module.exports = function (config) {
     var watch = getDefaultValue(config.watch, false),
         minimize = getDefaultValue(config.minimize, false),
-        minimizeExcludes = getDefaultValue(config.minimizeExcludes, undefined),
+        minimizeOptions = getDefaultValue(config.minimizeOptions, {}),
         extract = getDefaultValue(config.extract, true),
         hash = getDefaultValue(config.hash, false),
         manifest = getDefaultValue(config.manifest, false),
@@ -105,7 +105,7 @@ module.exports = function (config) {
                 new webpack.optimize.CommonsChunkPlugin(commonChunkConfig)
             ],
             manifest ? [new ManifestPlugin({basePath: publicPath})] : [],
-            minimize ? [new webpack.optimize.UglifyJsPlugin({exclude: minimizeExcludes})] : [],
+            minimize ? [new webpack.optimize.UglifyJsPlugin(minimizeOptions)] : [],
             extract ? [new ExtractTextPlugin(hash ? '[name]-[hash].css' : '[name].css', {allChunks: true})] : [],
             filesPath ? [new CopyWebpackPlugin([{from: filesPath}])] : []
         )
