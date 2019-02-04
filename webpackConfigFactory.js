@@ -35,7 +35,8 @@ module.exports = function (config) {
 
         presets = getDefaultValue(config.presets, ['es2015']),
         aliases = getDefaultValue(config.aliases, []),
-        provides = getDefaultValue(config.provides, []);
+        provides = getDefaultValue(config.provides, []),
+        loaders = getDefaultValue(config.loaders, []);
 
     var extractWrapper = getExtractWrapper(extract ? ExtractTextPlugin : undefined);
 
@@ -90,7 +91,9 @@ module.exports = function (config) {
                         include: new RegExp(path),
                         loader: 'file?name=[1]&regExp=' + path + '(.*)'
                     }
-                })
+                }),
+
+                loaders
             )
         },
 
